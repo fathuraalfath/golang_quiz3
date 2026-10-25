@@ -10,11 +10,14 @@ func StartServer() *gin.Engine {
 
 	router := gin.Default()
 
+	auth := controller.AuthMiddleware()
+
 	// route category
-	router.POST("/api/category", controller.CreateCategory)
-	router.GET("/api/category", controller.GetAllCategory)
-	router.PUT("/api/category/:id", controller.UpdateCategory)
-	router.DELETE("/api/category/:id", controller.DeleteCategory)
+	router.POST("/api/category", auth, controller.CreateCategory)
+	router.GET("/api/category", auth, controller.GetAllCategory)
+	router.PUT("/api/category/:id", auth, controller.UpdateCategory)
+	router.DELETE("/api/category/:id", auth, controller.DeleteCategory)
+	router.GET("/api/category/:id/books", auth, controller.GetAllBookByCategory)
 
 	// route users
 	router.POST("/api/users", controller.CreateUser)
@@ -23,10 +26,10 @@ func StartServer() *gin.Engine {
 	router.DELETE("/api/users/:id", controller.DeleteUser)
 
 	// route books
-	router.POST("/api/books", controller.CreateBook)
-	router.GET("/api/books", controller.GetAllBooks)
-	router.PUT("/api/books/:id", controller.UpdateBook)
-	router.DELETE("/api/books/:id", controller.DeleteBook)
+	router.POST("/api/books", auth, controller.CreateBook)
+	router.GET("/api/books", auth, controller.GetAllBooks)
+	router.PUT("/api/books/:id", auth, controller.UpdateBook)
+	router.DELETE("/api/books/:id", auth, controller.DeleteBook)
 
 	return router
 }
