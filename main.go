@@ -45,6 +45,15 @@ func main() {
 	// Buka koneksi ke database menggunakan GORM
 	var err error
 	database.DB, err = gorm.Open(postgres.Open(psqlInfo), &gorm.Config{})
+	if err == nil {
+		sqlDB, pingErr := database.DB.DB()
+		if pingErr == nil {
+			err = sqlDB.Ping()
+		} else {
+			err = pingErr
+		}
+	}
+
 	if err != nil {
 		fmt.Printf("Peringatan: Gagal terkoneksi ke database (%v)\n", err)
 	} else {
