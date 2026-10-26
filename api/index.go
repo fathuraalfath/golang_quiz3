@@ -27,10 +27,13 @@ func init() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path
-	app.ServeHTTP(w, r)
-
-	if path == "" {
-        path = "/"
+	 if !strings.HasPrefix(r.URL.Path, "/api") {
+        if r.URL.Path == "/" {
+            r.URL.Path = "/api"
+        } else {
+            r.URL.Path = "/api" + r.URL.Path
+        }
     }
+    
+    app.ServeHTTP(w, r)
 }
