@@ -27,20 +27,19 @@ func init() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	  // 1. Ambil path asli yang diminta dari Postman/browser
-    originalPath := r.URL.Path
+	 // 1. Tangkap rute asli utuh dari Postman melalui Header internal Vercel
+    forwardedUri := r.Header.Get("X-Forwarded-Uri")
+    matchedPath := r.Header.Get("X-Matched-Path")
 
-    // 2. Jika path tidak diawali dengan /api, tambahkan /api di depannya
-    if !strings.HasPrefix(originalPath, "/api") {
-        if originalPath == "/" {
-            r.URL.Path = "/api"
-        } else {
-            r.URL.Path = "/api" + originalPath
-        }
-    } else {
-        r.URL.Path = originalPath
+    // 2. Timpa rute request
+    if forwardedUri != "" {
+        r.URL.Path = forwardedUri
+    } else if matchedPath != "" {
+        r.URL.Path = matchedPath
+    }
+    if idx := strings.Index(r.URL.Path, "?"); idx != -1 {
+        r.URL.Path = r.URL.Path[:idx]
     }
 
-    // 3. Jalankan aplikasi Gin 
     app.ServeHTTP(w, r)
 }
