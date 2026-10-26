@@ -27,19 +27,6 @@ func init() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	 // 1. Tangkap rute asli utuh dari Postman melalui Header internal Vercel
-    forwardedUri := r.Header.Get("X-Forwarded-Uri")
-    matchedPath := r.Header.Get("X-Matched-Path")
-
-    // 2. Timpa rute request
-    if forwardedUri != "" {
-        r.URL.Path = forwardedUri
-    } else if matchedPath != "" {
-        r.URL.Path = matchedPath
-    }
-    if idx := strings.Index(r.URL.Path, "?"); idx != -1 {
-        r.URL.Path = r.URL.Path[:idx]
-    }
-
-    app.ServeHTTP(w, r)
+    // menjalankan engine Gin
+	app.ServeHTTP(w, r)
 }
