@@ -27,13 +27,20 @@ func init() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	 if !strings.HasPrefix(r.URL.Path, "/api") {
-        if r.URL.Path == "/" {
+	  // 1. Ambil path asli yang diminta dari Postman/browser
+    originalPath := r.URL.Path
+
+    // 2. Jika path tidak diawali dengan /api, tambahkan /api di depannya
+    if !strings.HasPrefix(originalPath, "/api") {
+        if originalPath == "/" {
             r.URL.Path = "/api"
         } else {
-            r.URL.Path = "/api" + r.URL.Path
+            r.URL.Path = "/api" + originalPath
         }
+    } else {
+        r.URL.Path = originalPath
     }
-    
+
+    // 3. Jalankan aplikasi Gin 
     app.ServeHTTP(w, r)
 }
