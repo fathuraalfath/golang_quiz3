@@ -27,5 +27,10 @@ func init() {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path
 	app.ServeHTTP(w, r)
+
+	if path == "" {
+        path = "/"
+    }
 }
